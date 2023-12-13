@@ -9,6 +9,8 @@ load_dotenv()
 validations = ScrapersValidations()
 
 class ScrapersInstance:
+
+    distance_enabled = os.getenv("DISTANCE", "False").lower() == "true"
     def validate_data(self, item):
 
         try:
@@ -90,9 +92,14 @@ class ScrapersInstance:
                     logger.error("Error al insertar el registro: %s", insert_item['exception'])
 
             if self.testing_enabled:
-                self.session.close(); self.server.close()
+                self.session.close()
+                if self.distance_enabled:
+                    self.server.close()
             else:
-                self.session.close(); self.server.close()
-                self.session_clie.close(); self.server_clie.close()
+                self.session.close()
+                self.session_clie.close()
+                if self.distance_enabled:
+                    self.server.close()
+                    self.server_clie.close()
         except TypeError as e:
             logger.error("Error al entrar al item: %s", e)
