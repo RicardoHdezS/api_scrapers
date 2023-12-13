@@ -25,6 +25,7 @@ class ScrapersInstance:
                 )
 
                 self.server_clie, self.session_clie = None, None
+
             else:
                 db_connection = MySQLDBConnection(
                     user=os.getenv("MYSQL_USER"),
@@ -36,11 +37,11 @@ class ScrapersInstance:
                 )
 
                 db_connection_clientes = MySQLDBConnection(
-                    user=os.getenv("MYSQL_USER_CLIENTES"),
-                    password=os.getenv("MYSQL_PASSWORD_CLIENTES"),
-                    host=os.getenv("MYSQL_HOST_CLIENTES"),
-                    port=int(os.getenv("MYSQL_PORT_CLIENTES")),
-                    database=os.getenv("MYSQL_DB_NAME_CLIENTES"),
+                    user=os.getenv("MYSQL_USER_CLIE"),
+                    password=os.getenv("MYSQL_PASSWORD_CLIE"),
+                    host=os.getenv("MYSQL_HOST_CLIE"),
+                    port=int(os.getenv("MYSQL_PORT_CLIE")),
+                    database=os.getenv("MYSQL_DB_NAME_CLIE"),
                     type="Clientes"
                 )
 
@@ -88,12 +89,10 @@ class ScrapersInstance:
                 elif insert_item['status'] == 'error':
                     logger.error("Error al insertar el registro: %s", insert_item['exception'])
 
-        except TypeError as e:
-            logger.error("Error al entrat al item: %s", e)
-
-        finally:
             if self.testing_enabled:
                 self.session.close(); self.server.close()
             else:
                 self.session.close(); self.server.close()
                 self.session_clie.close(); self.server_clie.close()
+        except TypeError as e:
+            logger.error("Error al entrar al item: %s", e)
