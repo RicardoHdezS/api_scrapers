@@ -51,12 +51,6 @@ class ScrapersInstance:
 
             self.server, self.session = db_connection.get_session()
 
-            print("** ** ** " * 10)
-            print(self.session)
-            print("-- ** -- " * 10)
-            print(self.session_clie)
-            print("** ** ** " * 10)
-
             logger.info("Buscando registro en la base de datos")
             query = (
                 self.session.query(
@@ -78,7 +72,9 @@ class ScrapersInstance:
                 logger.info("Registro existente: %s", item.news_url)
                 logger.info("Analizando elementos")
 
-                update = validations.update_title_or_content(self.session, item, result[0], self.session_clie)
+                update = validations.update_title_or_content(self.session, item, result[0], '')
+                if self.session_clie:
+                    update = validations.update_title_or_content(self.session_clie, item, result[0], 'Clientes')
 
                 if update['status'] == 'success':
                     logger.info("Registro actualizado: %s", item.news_url)

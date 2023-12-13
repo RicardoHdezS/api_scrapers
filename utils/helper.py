@@ -246,7 +246,7 @@ class ScrapersValidations:
                 captipomedio, capmedio, capnombre, capclasificacion, capterminado, captitulo, capcomentario,
                 cappersistent, captextcomp, captextsint, caporigen, captestigo, capurloriginal)
 
-    def update_title_or_content(self, session, item, result, session_clie):
+    def update_title_or_content(self, session, item, result, type):
 
         data = {
             'CAPFMODIF' : item.news_modified_date,
@@ -265,7 +265,7 @@ class ScrapersValidations:
 
         if 'CAPTEXTCOMP' in data or 'CAPTITULO' in data:
             try:
-                logger.info("Actualizando registro")
+                logger.info(f"Actualizando registro {type}")
                 update_content_or_title = (
                     update(IcapsulaData)
                     .values(data)
@@ -277,15 +277,7 @@ class ScrapersValidations:
                 )
 
                 session.execute(update_content_or_title)
-
-
-                if self.testing_enabled:
-                    session.commit()
-                else:
-                    logger.info("Actualizando registro en Clientes")
-                    session_clie.execute(update_content_or_title)
-                    session_clie.commit()
-                    session.commit()
+                session.commit()
 
                 return {
                     'status' : 'success',
