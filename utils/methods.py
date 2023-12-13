@@ -51,6 +51,12 @@ class ScrapersInstance:
 
             self.server, self.session = db_connection.get_session()
 
+            print("** ** ** " * 10)
+            print(self.session)
+            print("-- ** -- " * 10)
+            print(self.session_clie)
+            print("** ** ** " * 10)
+
             logger.info("Buscando registro en la base de datos")
             query = (
                 self.session.query(
