@@ -137,8 +137,6 @@ class ScrapersValidations:
         except Exception as e:
             logger.error("Error al insertar el nuevo registro: %s", e)
             session.rollback()
-        finally:
-            session.close()
 
     def insert_sequence_capsula_imagen(self, session):
         try:
