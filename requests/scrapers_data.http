@@ -1,0 +1,25 @@
+# Test your FastAPI endpoints
+
+GET http://127.0.0.1:8000/
+Accept: application/json
+
+###
+
+POST http://127.0.0.1:8000/scrapers/
+Content-Type: application/json
+
+{
+  "identifier_scraping": "web_scraping",
+  "news_publication_date": "2023-12-12 02:20:00",
+  "news_modified_date": "2023-12-12 02:20:00",
+  "db_insert_date": "2023-12-13 02:21:00",
+  "db_update_date": "2023-12-13 02:21:00",
+  "news_url": "https://6547756.rickapi.com/documentation/#graphql",
+  "news_section": "Home",
+  "news_head_title": "4.1hgvjk3443 Rick and Morty API Test",
+  "news_author": "Ricardo Hernandez",
+  "news_content": "Ricrfjdtk 4 anhfgd Morty is an American adult animated science fiction sitcom created by Justin Roiland and Dan Harmon for Cartoon Network's late-night programming block Adult Swim. The series follows the misadventures of cynical mad scientist Rick Sanchez and his good-hearted but fretful grandson Morty Smith, who split their time between domestic life and interdimensional adventures.",
+  "news_cve_medio": 959,
+  "news_media_id": 9999,
+  "news_taxonomy_name": "Pruebas con Rick y Morty"
+}
