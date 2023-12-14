@@ -69,19 +69,18 @@ class ScrapersInstance:
             if len(result) > 1:
                 logger.warning("Se encontro mas de un registro con la misma URL: %s", item.news_url)
             elif len(result) == 1:
-                logger.info("Registro existente: %s", item.news_url)
-                logger.info("Analizando elementos")
+                pass
+                #logger.info("Registro existente: %s", item.news_url)
+                #logger.info("Analizando elementos")
 
-                update = validations.update_title_or_content(self.session, item, result[0], '')
-                if self.session_clie:
-                    update = validations.update_title_or_content(self.session_clie, item, result[0], 'Clientes')
+                #update = validations.update_title_or_content(self.session, item, result[0], self.session_clie)
 
-                if update['status'] == 'success':
-                    logger.info("Registro actualizado: %s", item.news_url)
-                elif update['status'] == 'error':
-                    logger.error("Error al actualizar el registro: %s", update['exception'])
-                elif update['status'] == 'no_changes':
-                    logger.warning("No hay elementos por actualizar: %s", item.news_url)
+                #if update['status'] == 'success':
+                #    logger.info("Registro actualizado: %s", item.news_url)
+                #elif update['status'] == 'error':
+                #    logger.error("Error al actualizar el registro: %s", update['exception'])
+                #elif update['status'] == 'no_changes':
+                #    logger.warning("No hay elementos por actualizar: %s", item.news_url)
             else:
                 logger.info("Registro nuevo: %s", item.news_url)
                 logger.info("Insertando elementos")
