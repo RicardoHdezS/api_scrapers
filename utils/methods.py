@@ -38,17 +38,6 @@ class ScrapersInstance:
                     type="Produccion"
                 )
 
-                db_connection_clientes = MySQLDBConnection(
-                    user=os.getenv("MYSQL_USER_CLIE"),
-                    password=os.getenv("MYSQL_PASSWORD_CLIE"),
-                    host=os.getenv("MYSQL_HOST_CLIE"),
-                    port=int(os.getenv("MYSQL_PORT_CLIE")),
-                    database=os.getenv("MYSQL_DB_NAME_CLIE"),
-                    type="Clientes"
-                )
-
-                self.server_clie, self.session_clie = db_connection_clientes.get_session()
-
             self.server, self.session = db_connection.get_session()
 
             logger.info("Buscando registro en la base de datos")
@@ -85,7 +74,7 @@ class ScrapersInstance:
                 logger.info("Registro nuevo: %s", item.news_url)
                 logger.info("Insertando elementos")
 
-                insert_item = validations.insert_new_register(self.session, item, self.session_clie)
+                insert_item = validations.insert_new_register(self.session, item)
 
                 if insert_item['status'] == 'success':
                     logger.info("Registro insertado: %s", item.news_url)
@@ -98,9 +87,8 @@ class ScrapersInstance:
                     self.server.close()
             else:
                 self.session.close()
-                self.session_clie.close()
                 if self.distance_enabled:
                     self.server.close()
-                    self.server_clie.close()
+
         except TypeError as e:
             logger.error("Error al entrar al item: %s", e)
