@@ -249,11 +249,11 @@ class ScrapersValidations:
     def update_title_or_content(self, session, item, result, session_clie = None):
 
         data = {
-            'CAPFMODIF' : item.news_modified_date,
+            'CAPFMODIF' : datetime.now(),
             'CAPTESTIGO' : 'N',
             'CAPTENDENCIA2' : None,
             'CAPINTENTOS' : '0',
-            'CAPNOMBRE' : item.news_cve_medio,
+            'CAPNOMBRE' : result.CAPNOMBRE,
         }
 
         if item.news_head_title != result.CAPTITULO:
@@ -280,11 +280,22 @@ class ScrapersValidations:
                     session.execute(update_content_or_title)
                     session.commit()
                 else:
-                    session.execute(update_content_or_title)
-                    logger.info("Actualizando registro en Clientes")
-                    session_clie.execute(update_content_or_title)
-                    session_clie.commit()
-                    session.commit()
+                    try:
+                        -session.execute(update_content_or_title)
+                        logger.info("Actualizando registro en Clientes")
+                        session_clie.execute(update_content_or_title)
+                        session_clie.commit()
+                        session.commit()
+                    except Exception as e:
+                        logger.exception("Error al actualizar el registro en Clientes: %s", e)
+                        session_clie.rollback()
+                        session.rollback()
+
+                        return {
+                            'status': 'error',
+                            'data': data,
+                            'exception': e
+                        }
 
                 return {
                     'status' : 'success',
