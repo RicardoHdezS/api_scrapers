@@ -24,7 +24,7 @@ class MySQLDBConnection():
                 )
                 self.ssh_server.start()
 
-                self.engine = create_engine(f"mysql+pymysql://{user}:{password}@127.0.0.1:{self.ssh_server.local_bind_port}/{database}")
+                self.engine = create_engine(f"mysql+pymysql://{user}:{password}@127.0.0.1:{self.ssh_server.local_bind_port}/{database}", connect_args={'connect_timeout': int(os.getenv('ALCHEMY_TIMEOUT'))})
             except ConnectionError as e:
                 logger.error("Failed to connect to MySQL: %s", e)
             except Exception as e:
@@ -32,12 +32,13 @@ class MySQLDBConnection():
 
         else:
             try:
-                self.engine = create_engine(f"mysql+pymysql://{user}:{password}@{host}:{port}/{database}")
+                self.engine = create_engine(f"mysql+pymysql://{user}:{password}@{host}:{port}/{database}", connect_args={'connect_timeout': int(os.getenv('ALCHEMY_TIMEOUT'))})
             except ConnectionError as e:
                 logger.error("Failed to connect to MySQL: %s", e)
 
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
+
     def get_session(self):
 
         if self.distance_enabled:
