@@ -1,6 +1,4 @@
 import datetime
-
-from db.alchemy_connector import MySQLDBConnection
 from utils.logger import logger
 from data.models import (IcapsulaData, IcapsulaSequence,
                          IclippingImagen, IclippingPlutem,
@@ -15,8 +13,7 @@ load_dotenv()
 
 class ScrapersValidations:
     testing_enabled = os.getenv("TESTING", "False").lower() == "true"
-    distance_enabled = os.getenv("DISTANCE", "False").lower() == "true"
-    def insert_new_register(self, session, item):
+    def insert_new_register(self, session, item, session_clie = None):
         try:
 
             seq_insert = self.insert_sequence_capsula_imagen(session)
@@ -100,49 +97,24 @@ class ScrapersValidations:
                         if self.testing_enabled:
                             session.commit()
                         else:
-                            try:
-                                db_connection_clientes = MySQLDBConnection(
-                                    user=os.getenv("MYSQL_USER_CLIE"),
-                                    password=os.getenv("MYSQL_PASSWORD_CLIE"),
-                                    host=os.getenv("MYSQL_HOST_CLIE"),
-                                    port=int(os.getenv("MYSQL_PORT_CLIE")),
-                                    database=os.getenv("MYSQL_DB_NAME_CLIE"),
-                                    type="Clientes"
-                                )
+                            logger.info("Insertando en ICAPSULA Clientes")
+                            session_clie.execute(query_icapsula)
 
-                                self.server_clie, self.session_clie = db_connection_clientes.get_session()
+                            logger.info("Insertando en ICLIPPINGPLUTEM Clientes")
+                            session_clie.execute(query_iclippingplutem)
 
-                                logger.info("Insertando en ICAPSULA Clientes")
-                                self.session_clie.execute(query_icapsula)
+                            logger.info("Insertando en ICLIPPINGIMAGEN Clientes")
+                            session_clie.execute(query_iclippingimagen)
 
-                                logger.info("Insertando en ICLIPPINGPLUTEM Clientes")
-                                self.session_clie.execute(query_iclippingplutem)
+                            logger.info("Insertando en ICAPSULAALCANCE Clientes")
+                            session_clie.execute(text(query_icapsulaalcance), values_icapsulaalcance)
 
-                                logger.info("Insertando en ICLIPPINGIMAGEN Clientes")
-                                self.session_clie.execute(query_iclippingimagen)
+                            session.commit()
+                            session_clie.commit()
 
-                                logger.info("Insertando en ICAPSULAALCANCE Clientes")
-                                self.session_clie.execute(text(query_icapsulaalcance), values_icapsulaalcance)
-
-                                session.commit()
-                                self.session_clie.commit()
-
-                                self.session_clie.close()
-                                if self.distance_enabled:
-                                    self.server_clie.close()
-
-                                return {
-                                    'status': 'success',
-                                }
-
-                            except Exception as e:
-                                logger.error("Error al insertar en Clientes: %s", e)
-                                session.rollback()
-                                self.session_clie.rollback()
-                                self.session_clie.close()
-
-                                if self.distance_enabled:
-                                    self.server_clie.close()
+                        return {
+                            'status': 'success',
+                        }
 
                     except Exception as e:
 
