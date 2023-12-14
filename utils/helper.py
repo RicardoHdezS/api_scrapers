@@ -281,7 +281,7 @@ class ScrapersValidations:
                     session.commit()
                 else:
                     try:
-                        -session.execute(update_content_or_title)
+                        session.execute(update_content_or_title)
                         logger.info("Actualizando registro en Clientes")
                         session_clie.execute(update_content_or_title)
                         session_clie.commit()
