@@ -120,6 +120,11 @@ class ScrapersValidations:
 
                         session.rollback()
 
+                        if self.testing_enabled:
+                            session.rollback()
+                        else:
+                            session_clie.rollback()
+
                         return {
                             'status': 'error',
                             'exception': e
