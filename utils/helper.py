@@ -110,7 +110,7 @@ class ScrapersValidations:
                             session_clie.execute(query_iclippingimagen)
 
                             logger.info("Insertando en ICAPSULAALCANCE Clientes")
-                            session.execute(query_icapsulaalcance, values_icapsulaalcance)
+                            session_clie.execute(query_icapsulaalcance, values_icapsulaalcance)
 
                             session.commit()
                             session_clie.commit()
