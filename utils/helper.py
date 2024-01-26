@@ -71,28 +71,30 @@ class ScrapersValidations:
                         session.execute(query_iclippingimagen)
 
                         logger.info("Insertando en ICAPSULAALCANCE")
-                        query_icapsulaalcance = """
-                        INSERT INTO 
-                            INTELITE_ICAPSULAALCANCE 
-                                (caacapsula, caadist8a12, caadist13a17, caadist18a24,
-                                caadist25a34, caadist35a44, caadist45a54, caadist55amas,
-                                caadistalto, caadistmedio, caadistbajo, caadisthombre,
-                                caadistmujer, caabanda, caaalcancereal)
-                                SELECT DISTINCT 
-                                    :capclave, caldist8a12, caldist13a17, caldist18a24,
-                                    caldist25a34, caldist35a44, caldist45a54, caldist55amas,
-                                    caldistalto, caldistmedio, caldistbajo, caldisthombre,
-                                    caldistmujer, calbanda, caldisthombre+caldistmujer
-                                FROM 
-                                    INTELITE_ICATALCANCE
-                                WHERE 
-                                    calcvemedio = :cvemedio
-                        """
+
+                        query_icapsulaalcance = text("""
+                            INSERT INTO INTELITE_ICAPSULAALCANCE
+                            (caacapsula, caadist8a12, caadist13a17, caadist18a24,
+                            caadist25a34, caadist35a44, caadist45a54, caadist55amas,
+                            caadistalto, caadistmedio, caadistbajo, caadisthombre,
+                            caadistmujer, caabanda, caaalcancereal)
+                            SELECT DISTINCT
+                                :capclave, caldist8a12, caldist13a17, caldist18a24,
+                                caldist25a34, caldist35a44, caldist45a54, caldist55amas,
+                                caldistalto, caldistmedio, caldistbajo, caldisthombre,
+                                caldistmujer, calbanda, caldisthombre + caldistmujerº
+                            FROM
+                                INTELITE_ICATALCANCE
+                            WHERE
+                                calcvemedio = :capnombre
+                        """)
+
                         values_icapsulaalcance = {
                             'capclave': values[0],
-                            'cvemedio': values[9]
+                            'capnombre': values[10]
                         }
-                        session.execute(text(query_icapsulaalcance), values_icapsulaalcance)
+
+                        session.execute(query_icapsulaalcance, values_icapsulaalcance)
 
                         if self.testing_enabled:
                             session.commit()
@@ -107,7 +109,7 @@ class ScrapersValidations:
                             session_clie.execute(query_iclippingimagen)
 
                             logger.info("Insertando en ICAPSULAALCANCE Clientes")
-                            session_clie.execute(text(query_icapsulaalcance), values_icapsulaalcance)
+                            session.execute(query_icapsulaalcance, values_icapsulaalcance)
 
                             session.commit()
                             session_clie.commit()
@@ -129,9 +131,11 @@ class ScrapersValidations:
                             'status': 'error',
                             'exception': e
                         }
+                else:
+                    logger.error("Error al obtener el complemento de registro: %s", iftenombre_data['data'])
 
             else:
-                logger.error("Error al insertar la secuencia: %s", seq_insert['exception'])
+                logger.error("Error al insertar la secuencia: %s", seq_insert['data'])
 
                 return {
                     'status': 'error',
@@ -183,6 +187,8 @@ class ScrapersValidations:
     def get_iftenombre(self, session, item):
         try:
             logger.info("Obteniendo complemento de registro")
+            print(item)
+            print(item.news_cve_medio)
             query = (
                 session.query(
                     IfteNombre.FNOCLAVE,
@@ -198,6 +204,7 @@ class ScrapersValidations:
             )
 
             result = query.all()
+            print(result)
 
             if len(result) == 1:
 
@@ -219,7 +226,7 @@ class ScrapersValidations:
 
             return {
                 'status': 'error',
-                'exception': e,
+                'data': e,
             }
 
     def set_values_to_insert(self, item, sequence, iftenombre_data):
