@@ -73,20 +73,21 @@ class ScrapersValidations:
                         logger.info("Insertando en ICAPSULAALCANCE")
 
                         query_icapsulaalcance = text("""
-                            INSERT INTO INTELITE_ICAPSULAALCANCE
-                            (caacapsula, caadist8a12, caadist13a17, caadist18a24,
-                            caadist25a34, caadist35a44, caadist45a54, caadist55amas,
-                            caadistalto, caadistmedio, caadistbajo, caadisthombre,
-                            caadistmujer, caabanda, caaalcancereal)
-                            SELECT DISTINCT
-                                :capclave, caldist8a12, caldist13a17, caldist18a24,
-                                caldist25a34, caldist35a44, caldist45a54, caldist55amas,
-                                caldistalto, caldistmedio, caldistbajo, caldisthombre,
-                                caldistmujer, calbanda, caldisthombre + caldistmujerº
-                            FROM
-                                INTELITE_ICATALCANCE
-                            WHERE
-                                calcvemedio = :capnombre
+                        INSERT INTO 
+                            INTELITE_ICAPSULAALCANCE 
+                                (caacapsula, caadist8a12, caadist13a17, caadist18a24,
+                                caadist25a34, caadist35a44, caadist45a54, caadist55amas,
+                                caadistalto, caadistmedio, caadistbajo, caadisthombre,
+                                caadistmujer, caabanda, caaalcancereal)
+                                SELECT DISTINCT 
+                                    :capclave, caldist8a12, caldist13a17, caldist18a24,
+                                    caldist25a34, caldist35a44, caldist45a54, caldist55amas,
+                                    caldistalto, caldistmedio, caldistbajo, caldisthombre,
+                                    caldistmujer, calbanda, caldisthombre+caldistmujer
+                                FROM 
+                                    INTELITE_ICATALCANCE
+                                WHERE 
+                                    calcvemedio = :capnombre
                         """)
 
                         values_icapsulaalcance = {
